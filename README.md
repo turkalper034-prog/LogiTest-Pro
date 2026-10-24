@@ -22,7 +22,8 @@
 - 📊 Stok, ürün ve düşük stok eşiği için analitik özetler
 - 🧾 Sipariş oluşturma, arama, detay görüntüleme ve durum akışı
 - 🛡️ Girdi doğrulama, benzersiz SKU kontrolü ve yetersiz stok koruması
-- 🧪 API testleri için içe aktarılabilir Postman koleksiyonu
+- 🧪 5 istek ve 24 assertion içeren Postman API test koleksiyonu; Newman ile komut satırından çalıştırma ve HTML raporlama
+- 🔧 Jenkins entegrasyonu için çalıştırma ve rapor yayımlama yönergeleri
 - 🐳 Docker Compose ile frontend ve API'yi birlikte çalıştırma
 
 ## 🧰 Teknolojiler
@@ -43,7 +44,13 @@ Gereksinimler: Docker ve Docker Compose.
 
 ```bash
 git clone https://github.com/turkalper034-prog/LogiTest-Pro.git
+```
+
+```bash
 cd LogiTest-Pro
+```
+
+```bash
 docker compose up --build
 ```
 
@@ -64,6 +71,9 @@ Gereksinimler: Python 3.11+, Node.js 18+ ve npm.
 
 ```bash
 cd backend
+```
+
+```bash
 python -m venv .venv
 ```
 
@@ -83,6 +93,9 @@ Ardından API bağımlılıklarını yükleyip sunucuyu çalıştırın:
 
 ```bash
 pip install -r requirements.txt
+```
+
+```bash
 uvicorn app.main:app --reload
 ```
 
@@ -90,7 +103,13 @@ uvicorn app.main:app --reload
 
 ```bash
 cd frontend
+```
+
+```bash
 npm install
+```
+
+```bash
 npm run dev
 ```
 
@@ -104,6 +123,9 @@ Backend testleri:
 
 ```bash
 cd backend
+```
+
+```bash
 python -m unittest discover -s tests -v
 ```
 
@@ -111,10 +133,47 @@ Frontend derleme kontrolü:
 
 ```bash
 cd frontend
+```
+
+```bash
 npm run build
 ```
 
-Postman kullanmak için kökteki **`LogiTest Pro API Tests.postman_collection.json`** dosyasını Postman'e içe aktarın. Koleksiyondaki istekler varsayılan olarak `http://localhost:8000` adresindeki API'yi kullanır.
+## 🧪 API Test Otomasyonu ve CI
+
+LogiTest Pro, Postman koleksiyonuyla API testlerini otomatikleştirir. Koleksiyon ürün listeleme ve getirme, bulunmayan ürünü doğrulama, ürün oluşturma ve yinelenen SKU kontrolü senaryolarını; HTTP durum kodu ve yanıt gövdesi assertion'larıyla kapsar.
+
+### Newman ile testleri çalıştırma
+
+Önce API'yi `http://localhost:8000` adresinde çalıştırın. Newman ve HTML raporlayıcısını kurmak için:
+
+```bash
+npm install -g newman newman-reporter-htmlextra
+```
+
+Postman koleksiyonunu Newman ile çalıştırın:
+
+```bash
+newman run "LogiTest Pro API Tests.postman_collection.json"
+```
+
+CLI çıktısına ek olarak etkileşimli HTML raporu oluşturun:
+
+```bash
+newman run "LogiTest Pro API Tests.postman_collection.json" --reporters cli,htmlextra --reporter-htmlextra-export "LogiTest-Pro-Newman-Report.html"
+```
+
+Oluşturulan `LogiTest-Pro-Newman-Report.html` dosyası `.gitignore` kapsamındadır; her çalıştırmada yerel olarak yeniden oluşturulur.
+
+### Jenkins pipeline durumu
+
+Depodaki `docker-compose.yml`, Dockerfile'lar, Nginx yapılandırması ve `/api/v1/health` sağlık kontrolü uç noktası kaynak dosyalarında mevcuttur. `.env.example` da yerel yapılandırma örneği olarak depoda bulunur. Sağlık kontrolü uç noktası yerel API'de doğrulanmıştır. Ancak depoda bir `Jenkinsfile` bulunmadığından Jenkins pipeline'ının bu koleksiyonu otomatik çalıştırıp HTML raporunu yayımladığı doğrulanmış değildir. Jenkins'te bu otomasyon için Newman ve `newman-reporter-htmlextra` kurulumunu pipeline'a ekleyin; HTML raporunu yayımlamak için Jenkins HTML Publisher eklentisini yapılandırın.
+
+### Son yerel çalıştırma kaydı
+
+Koleksiyondaki **5 istek ve 24 assertion**, mevcut Postman koleksiyonunun içeriğinden sayılmıştır. **0 başarısızlık** sonucu, paylaşılan son yerel çalıştırma kaydını ifade eder; README güncellenirken yeni bir Newman çalıştırması olarak yeniden doğrulanmamıştır. Sonuçlar sonraki çalıştırmalarda API ve veritabanı durumuna göre değişebilir.
+
+Postman'de incelemek veya çalıştırmak için kökteki **`LogiTest Pro API Tests.postman_collection.json`** dosyasını içe aktarın. İstekler varsayılan olarak `http://localhost:8000` adresindeki API'yi kullanır.
 
 ## 🔌 API uç noktaları
 
