@@ -167,11 +167,17 @@ Oluşturulan `LogiTest-Pro-Newman-Report.html` dosyası `.gitignore` kapsamında
 
 ### Jenkins pipeline durumu
 
-Depodaki `docker-compose.yml`, Dockerfile'lar, Nginx yapılandırması ve `/api/v1/health` sağlık kontrolü uç noktası kaynak dosyalarında mevcuttur. `.env.example` da yerel yapılandırma örneği olarak depoda bulunur. Sağlık kontrolü uç noktası yerel API'de doğrulanmıştır. Ancak depoda bir `Jenkinsfile` bulunmadığından Jenkins pipeline'ının bu koleksiyonu otomatik çalıştırıp HTML raporunu yayımladığı doğrulanmış değildir. Jenkins'te bu otomasyon için Newman ve `newman-reporter-htmlextra` kurulumunu pipeline'a ekleyin; HTML raporunu yayımlamak için Jenkins HTML Publisher eklentisini yapılandırın.
+`LogiTest-Pro-API-Automation` Jenkins işi, Pipeline kodunu GitHub deposunun `main` branch'indeki `Jenkinsfile` dosyasından alır ve başarıyla çalıştırır. Newman, Postman API koleksiyonunu çalıştırır; oluşturulan HTML raporu Jenkins HTML Publisher ile yayımlanır. Testlerin çalışabilmesi için API'nin Jenkins agent'ında `http://localhost:8000` adresinde erişilebilir olması gerekir. GitHub push işlemlerinin Jenkins'i otomatik tetiklediği doğrulanmamıştır.
 
-### Son yerel çalıştırma kaydı
+### Son doğrulanan test çalıştırması
 
-Koleksiyondaki **5 istek ve 24 assertion**, mevcut Postman koleksiyonunun içeriğinden sayılmıştır. **0 başarısızlık** sonucu, paylaşılan son yerel çalıştırma kaydını ifade eder; README güncellenirken yeni bir Newman çalıştırması olarak yeniden doğrulanmamıştır. Sonuçlar sonraki çalıştırmalarda API ve veritabanı durumuna göre değişebilir.
+Jenkins'te doğrulanan son build sonucu **SUCCESS**: **5 API isteği**, **24 assertion**, **0 başarısız test**. Ortalama API yanıt süresi **41 ms** olarak ölçülmüştür. Newman HTML raporu Jenkins HTML Publisher üzerinden yayımlanmıştır. Sonuçlar sonraki çalıştırmalarda değişebilir.
+
+### GitHub üzerinden Jenkins Pipeline
+
+Jenkins işi **`LogiTest-Pro-API-Automation`**, GitHub deposunun `main` branch'indeki `Jenkinsfile` dosyasını kullanır. Pipeline, Postman API koleksiyonunu Newman ile otomatik çalıştırır ve HTML raporunu Jenkins HTML Publisher ile arşivler.
+
+Son doğrulanan build sonucu **SUCCESS**: **5 istek**, **24 assertion**, **0 başarısız test**. Ortalama API yanıt süresi **41 ms** olarak ölçülmüştür.
 
 Postman'de incelemek veya çalıştırmak için kökteki **`LogiTest Pro API Tests.postman_collection.json`** dosyasını içe aktarın. İstekler varsayılan olarak `http://localhost:8000` adresindeki API'yi kullanır.
 
