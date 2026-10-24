@@ -167,17 +167,9 @@ Oluşturulan `LogiTest-Pro-Newman-Report.html` dosyası `.gitignore` kapsamında
 
 ### Jenkins pipeline durumu
 
-`LogiTest-Pro-API-Automation` Jenkins işi, Pipeline kodunu GitHub deposunun `main` branch'indeki `Jenkinsfile` dosyasından alır ve başarıyla çalıştırır. Newman, Postman API koleksiyonunu çalıştırır; oluşturulan HTML raporu Jenkins HTML Publisher ile yayımlanır. Testlerin çalışabilmesi için API'nin Jenkins agent'ında `http://localhost:8000` adresinde erişilebilir olması gerekir. GitHub push işlemlerinin Jenkins'i otomatik tetiklediği doğrulanmamıştır.
+`LogiTest-Pro-API-Automation` Jenkins işi, Pipeline kodunu GitHub deposunun `main` branch'indeki `Jenkinsfile` dosyasından alır ve Postman API koleksiyonunu Newman ile çalıştırır. Testler sırasında API'nin Jenkins agent'ında `http://localhost:8000` adresinde erişilebilir olması gerekir. Newman HTML raporu Jenkins HTML Publisher ile yayımlanır.
 
-### Son doğrulanan test çalıştırması
-
-Jenkins'te doğrulanan son build sonucu **SUCCESS**: **5 API isteği**, **24 assertion**, **0 başarısız test**. Ortalama API yanıt süresi **41 ms** olarak ölçülmüştür. Newman HTML raporu Jenkins HTML Publisher üzerinden yayımlanmıştır. Sonuçlar sonraki çalıştırmalarda değişebilir.
-
-### GitHub üzerinden Jenkins Pipeline
-
-Jenkins işi **`LogiTest-Pro-API-Automation`**, GitHub deposunun `main` branch'indeki `Jenkinsfile` dosyasını kullanır. Pipeline, Postman API koleksiyonunu Newman ile otomatik çalıştırır ve HTML raporunu Jenkins HTML Publisher ile arşivler.
-
-Son doğrulanan build sonucu **SUCCESS**: **5 istek**, **24 assertion**, **0 başarısız test**. Ortalama API yanıt süresi **41 ms** olarak ölçülmüştür.
+Son doğrulanan build sonucu **SUCCESS**: **5 API isteği**, **24 assertion**, **0 başarısız test** ve **41 ms** ortalama yanıt süresi. Sonuçlar sonraki çalıştırmalarda değişebilir. GitHub push işlemlerinin Jenkins'i otomatik tetiklediği doğrulanmamıştır.
 
 Postman'de incelemek veya çalıştırmak için kökteki **`LogiTest Pro API Tests.postman_collection.json`** dosyasını içe aktarın. İstekler varsayılan olarak `http://localhost:8000` adresindeki API'yi kullanır.
 
