@@ -1,0 +1,206 @@
+{
+  "info": {
+    "_postman_id": "9801d6ba-df01-4aad-915b-3b3425406d55",
+    "name": "LogiTest Pro API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56687571",
+    "_collection_link": "https://go.postman.co/collection/56687571-9801d6ba-df01-4aad-915b-3b3425406d55?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\npm.test(\"Response time is less than 200ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(200);\r\n});\r\npm.test(\"Response body is valid JSON\",function () {\r\n    pm.response.to.be.json;\r\n}); \r\n\r\npm.test(\"Response is an array or contains a products array\", function () {\r\n    const data = pm.response.json();\r\n\r\n    const products = Array.isArray(data)\r\n        ? data\r\n        : data.products;\r\n\r\n    pm.expect(products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Each product has an ID and name\", function () {\r\n    const data = pm.response.json();\r\n\r\n    const products = Array.isArray(data)\r\n        ? data\r\n        : data.products;\r\n\r\n    pm.expect(products).to.be.an(\"array\");\r\n\r\n    products.forEach(function (product) {\r\n        pm.expect(product).to.have.property(\"id\");\r\n        pm.expect(product).to.have.property(\"name\");\r\n    });\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product has an ID\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"id\");\r\n});\r\n\r\npm.test(\"Product has a name\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"name\");\r\n});\r\n\r\npm.test(\"Product ID matches the requested ID\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(String(product.id)).to.eql(\"1\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/products/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Non-Existing Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Error response contains a message\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"detail\");\r\n    pm.expect(data.detail).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Error message is not empty\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail.trim()).to.not.equal(\"\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/products/999999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "999999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product name matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.name).to.eql(\"QA Test Keyboard\");\r\n});\r\n\r\npm.test(\"SKU matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.sku).to.eql(\r\n        pm.collectionVariables.get(\"testSku\")\r\n);  \r\n\r\n});\r\n\r\npm.test(\"Product has an ID and creation date\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.created_at).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Quantity and price are correct\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.quantity).to.eql(10);\r\n    pm.expect(data.price).to.eql(35);\r\n});"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set(\r\n    \"testSku\",\r\n    \"QA-KB-\" + Date.now()\r\n);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"QA Test Keyboard\",\r\n    \"sku\": \"{{testSku}}\",\r\n    \"description\": \"Product created during API testing\",\r\n    \"category\": \"Electronics\",\r\n    \"quantity\": 10,\r\n    \"price\": 35.0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Duplicate SKU Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 409 Conflict\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Duplicate SKU error message is returned\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.detail).to.include(\"SKU\");\r\n});\r\n\r\npm.test(\"Duplicate SKU is rejected\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.detail).to.not.be.empty;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Duplicate Test Product\",\r\n    \"sku\": \"{{testSku}}\",\r\n    \"description\": \"Testing duplicate SKU validation\",\r\n    \"category\": \"Electronics\",\r\n    \"quantity\": 5,\r\n    \"price\": 20.0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "testSku",
+      "value": ""
+    }
+  ]
+}
