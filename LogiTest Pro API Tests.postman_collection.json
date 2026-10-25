@@ -24,82 +24,16 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8000/api/v1/products",
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{apiHost}}"
           ],
-          "port": "8000",
+          "port": "{{apiPort}}",
           "path": [
             "api",
             "v1",
             "products"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Product by ID",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product has an ID\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"id\");\r\n});\r\n\r\npm.test(\"Product has a name\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"name\");\r\n});\r\n\r\npm.test(\"Product ID matches the requested ID\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(String(product.id)).to.eql(\"1\");\r\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/products/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "v1",
-            "products",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Non-Existing Product",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Error response contains a message\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"detail\");\r\n    pm.expect(data.detail).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Error message is not empty\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail.trim()).to.not.equal(\"\");\r\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/products/999999",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "v1",
-            "products",
-            "999999"
           ]
         }
       },
@@ -113,7 +47,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product name matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.name).to.eql(\"QA Test Keyboard\");\r\n});\r\n\r\npm.test(\"SKU matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.sku).to.eql(\r\n        pm.collectionVariables.get(\"testSku\")\r\n);  \r\n\r\n});\r\n\r\npm.test(\"Product has an ID and creation date\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.created_at).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Quantity and price are correct\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.quantity).to.eql(10);\r\n    pm.expect(data.price).to.eql(35);\r\n});"
+              "pm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product name matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.name).to.eql(\"QA Test Keyboard\");\r\n});\r\n\r\npm.test(\"SKU matches the request\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.sku).to.eql(\r\n        pm.collectionVariables.get(\"testSku\")\r\n);  \r\n\r\n});\r\n\r\npm.test(\"Product has an ID and creation date\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.created_at).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Quantity and price are correct\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.quantity).to.eql(10);\r\n    pm.expect(data.price).to.eql(35);\r\n});\r\npm.test(\"Product ID is saved for later requests\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.collectionVariables.set(\"productId\", data.id);\r\n});"
             ]
           }
         },
@@ -140,16 +74,82 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8000/api/v1/products",
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{apiHost}}"
           ],
-          "port": "8000",
+          "port": "{{apiPort}}",
           "path": [
             "api",
             "v1",
             "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Product by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Product has an ID\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"id\");\r\n});\r\n\r\npm.test(\"Product has a name\", function () {\r\n    const product = pm.response.json();\r\n    pm.expect(product).to.have.property(\"name\");\r\n});\r\n\r\npm.test(\"Product ID matches the requested ID\", function () {\r\n    const product = pm.response.json();\r\n\r\n    pm.expect(String(product.id)).to.eql(\r\n        String(pm.collectionVariables.get(\"productId\"))\r\n    );\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products/{{productId}}",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Non-Existing Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Error response contains a message\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"detail\");\r\n    pm.expect(data.detail).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Error message is not empty\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail.trim()).to.not.equal(\"\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products/999999",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "products",
+            "999999"
           ]
         }
       },
@@ -163,7 +163,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 409 Conflict\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Duplicate SKU error message is returned\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.detail).to.include(\"SKU\");\r\n});\r\n\r\npm.test(\"Duplicate SKU is rejected\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.detail).to.not.be.empty;\r\n});"
+              "\r\npm.test(\"Status code is 409 Conflict\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Duplicate SKU error message is returned\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail).to.be.a(\"string\");\r\n    pm.expect(data.detail).to.include(\"SKU\");\r\n});\r\n\r\npm.test(\"Duplicate SKU is rejected with the expected message\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail).to.eql(\"Bu SKU zaten kullanılıyor.\");\r\n});\r\n"
             ]
           }
         }
@@ -181,12 +181,12 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8000/api/v1/products",
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products",
           "protocol": "http",
           "host": [
-            "localhost"
+            "{{apiHost}}"
           ],
-          "port": "8000",
+          "port": "{{apiPort}}",
           "path": [
             "api",
             "v1",
@@ -195,11 +195,333 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Invalid Product Data Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 422 Unprocessable Entity\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Validation errors are returned\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"detail\");\r\n    pm.expect(data.detail).to.be.an(\"array\");\r\n    pm.expect(data.detail.length).to.be.greaterThan(0);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"name\": \"   \",\r\n  \"sku\": \"QA-INVALID-001\",\r\n  \"description\": \"Invalid product test\",\r\n  \"category\": \"Test\",\r\n  \"quantity\": -1,\r\n  \"price\": -0.01\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/products",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Warehouse",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set(\"warehouseName\", \"QA Test Deposu-\" + Date.now() + \"-\" + Math.random().toString(36).slice(2, 8).toUpperCase());"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Warehouse has required fields\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.name).to.eql(pm.collectionVariables.get(\"warehouseName\"));\r\n    pm.expect(data.location).to.eql(\"İstanbul\");\r\n    pm.expect(data.created_at).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Warehouse ID is saved for later requests\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.collectionVariables.set(\"warehouseId\", data.id);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"{{warehouseName}}\",\r\n  \"location\": \"İstanbul\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/inventory/warehouses",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "inventory",
+            "warehouses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Stock Movement",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Movement details are correct\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.product_id).to.eql(\r\n        Number(pm.collectionVariables.get(\"productId\"))\r\n    );\r\n    pm.expect(data.warehouse_id).to.eql(\r\n        Number(pm.collectionVariables.get(\"warehouseId\"))\r\n    );\r\n    pm.expect(data.movement_type).to.eql(\"inbound\");\r\n    pm.expect(data.quantity).to.eql(3);\r\n});\r\n\r\npm.test(\"Stock increased by 3\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.new_quantity).to.eql(\r\n        data.previous_quantity + 3\r\n    );\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"product_id\": {{productId}},\r\n  \"warehouse_id\": {{warehouseId}},\r\n  \"movement_type\": \"inbound\",\r\n  \"quantity\": 3,\r\n  \"note\": \"QA stok girişi\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/inventory/movements",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "inventory",
+            "movements"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Insufficient Stock Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 409 Conflict\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Insufficient stock error is returned\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.detail).to.eql(\r\n        \"Stok yetersiz; negatif stok oluşturulamaz.\"\r\n    );\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"product_id\": {{productId}},\r\n  \"warehouse_id\": {{warehouseId}},\r\n  \"movement_type\": \"outbound\",\r\n  \"quantity\": 9999,\r\n  \"note\": \"QA yetersiz stok testi\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/inventory/movements",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "inventory",
+            "movements"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid Stock Movement Quantity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 422 Unprocessable Entity\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Validation error is returned\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"detail\");\r\n    pm.expect(data.detail).to.be.an(\"array\");\r\n    pm.expect(data.detail.length).to.be.greaterThan(0);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"product_id\": {{productId}},\r\n  \"warehouse_id\": {{warehouseId}},\r\n  \"movement_type\": \"inbound\",\r\n  \"quantity\": -1,\r\n  \"note\": \"QA sıfır miktar testi\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/inventory/movements",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "inventory",
+            "movements"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Status code is 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Order has required fields\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.id).to.exist;\r\n    pm.expect(data.order_number).to.be.a(\"string\");\r\n    pm.expect(data.order_number).to.include(\"ORD-\");\r\n    pm.expect(data.status).to.eql(\"pending\");\r\n    pm.expect(data.warehouse_id).to.eql(\r\n        Number(pm.collectionVariables.get(\"warehouseId\"))\r\n    );\r\n    pm.expect(data.items).to.be.an(\"array\").that.is.not.empty;\r\n});\r\n\r\npm.test(\"Order ID is saved for later requests\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.collectionVariables.set(\"orderId\", data.id);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"warehouse_id\": {{warehouseId}},\r\n  \"items\": [\r\n    {\r\n      \"product_id\": {{productId}},\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/orders",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Order Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"Order status is confirmed\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.status).to.eql(\"confirmed\");\r\n});\r\n\r\npm.test(\"Correct order is updated\", function () {\r\n    const data = pm.response.json();\r\n    pm.expect(data.id).to.eql(\r\n        Number(pm.collectionVariables.get(\"orderId\"))\r\n    );\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"status\": \"confirmed\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{apiHost}}:{{apiPort}}/api/v1/orders/{{orderId}}/status",
+          "protocol": "http",
+          "host": [
+            "{{apiHost}}"
+          ],
+          "port": "{{apiPort}}",
+          "path": [
+            "api",
+            "v1",
+            "orders",
+            "{{orderId}}",
+            "status"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [
     {
+      "key": "apiPort",
+      "value": "8000"
+    },
+    {
+      "key": "apiHost",
+      "value": "localhost"
+    },
+    {
       "key": "testSku",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "warehouseId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
       "value": ""
     }
   ]
